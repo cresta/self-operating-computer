@@ -51,10 +51,7 @@ google-generativeai==0.3.0
 aiohttp==3.9.1
 ultralytics==8.0.227
 easyocr==1.7.1
-<<<<<<< Updated upstream
 flask==2.0.3
 flask_cors==3.0.9
-=======
 websocket-client==1.7.0
 rel==0.4.9.5
->>>>>>> Stashed changes
