@@ -26,3 +26,16 @@ def operate():
         return {'error': 'prompt is required'}, HTTPStatus.BAD_REQUEST
     main(model="gpt-4-with-ocr", terminal_prompt=prompt)
     return {}, HTTPStatus.OK
+
+
+@app.post("/messages")
+def postMessages():
+    body = request.json
+    print(body)
+    return {}, HTTPStatus.OK
+
+@app.post("/conversationEvents")
+def postConversationEvents():
+    body = request.json
+    print(body)
+    return {}, HTTPStatus.OK
