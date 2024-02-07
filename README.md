@@ -1,6 +1,6 @@
 # Start flask server
 
-PYTHONPATH=./ FLASK_ENV=development FLASK_APP=server flask run
+OPENAI_API_KEY={your api key} PYTHONPATH=./ FLASK_ENV=development FLASK_APP=server flask run
 
 <h1 align="center">Self-Operating Computer Framework</h1>
 
