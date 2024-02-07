@@ -2,10 +2,15 @@ from flask import Flask, request
 from flask_cors import CORS
 from http import HTTPStatus
 from operate.main import main
+from concurrent.futures import ThreadPoolExecutor
 
 app = Flask(__name__)
 cors = CORS(app)
 
+thread_pool = ThreadPoolExecutor(max_workers=1)
+
+def handler(body):
+    pass
 
 @app.route('/')
 def hello():
@@ -32,10 +37,12 @@ def operate():
 def postMessages():
     body = request.json
     print(body)
+    thread_pool.submit(handler, body)
     return {}, HTTPStatus.OK
 
 @app.post("/conversationEvents")
 def postConversationEvents():
     body = request.json
     print(body)
+    thread_pool.submit(handler, body)
     return {}, HTTPStatus.OK
