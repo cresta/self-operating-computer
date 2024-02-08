@@ -5,6 +5,7 @@ from operate.main import main
 from concurrent.futures import ThreadPoolExecutor
 from operate.models.apis import summarize_messages
 from datetime import datetime
+from operations import google_search, take_notes_in_google_docs
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -18,10 +19,10 @@ def handleConversationEvent(body):
     conversation_events.append(body)
     type = body.get('type', None)
     if type and type == 'CLOSE':
-        print(messages)
         message_list = sorted(messages.values(), key=lambda item: item['create_time'])
-        print(message_list)
+        print(f'message list: {message_list}')
         summary = summarize_messages(message_list)
+        take_notes_in_google_docs(summary)
         print(summary)
         messages.clear()
         conversation_events.clear()
@@ -47,8 +48,7 @@ def handleMessage(msg):
     }
     text = msg.get('text', None)
     if text and 'credit score' in text and '?' in text:
-        prompt = 'What is my credit score?'
-        main(model="gpt-4-with-ocr", terminal_prompt=prompt)
+        google_search(text)
 
 def parse_timestamp(ts):
     return datetime.fromisoformat(ts.replace('Z', '+00:00'))
