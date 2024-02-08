@@ -92,8 +92,7 @@ def summarize_messages(messages):
             content = content[len("```json") :]  # Remove starting ```json
             if content.endswith("```"):
                 content = content[: -len("```")]  # Remove ending
-
-        content = json.loads(content)
+            content = json.loads(content)
 
         return content
 
@@ -101,6 +100,7 @@ def summarize_messages(messages):
         print(
             f"{ANSI_GREEN}[Self-Operating Computer]{ANSI_RED}[Error] failed to generate summary {ANSI_RESET}",
             content,
+            e,
         )
         if VERBOSE:
             traceback.print_exc()
@@ -140,8 +140,7 @@ def extract_entities(messages):
             content = content[len("```json") :]  # Remove starting ```json
             if content.endswith("```"):
                 content = content[: -len("```")]  # Remove ending
-
-        content = json.loads(content)
+            content = json.loads(content)
 
         return content
 

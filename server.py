@@ -21,10 +21,8 @@ def handleConversationEvent(body):
     type = body.get('type', None)
     if type and type == 'CLOSE':
         message_list = sorted(messages.values(), key=lambda item: item['create_time'])
-        print(f'message list: {message_list}')
         summary = summarize_messages(message_list)
         take_notes_in_google_docs(summary)
-        print(summary)
         messages.clear()
         conversation_events.clear()
 
@@ -46,7 +44,6 @@ def handleMessage(msg):
     text = msg.get('text', None)
     if not messageExists and text and 'handle it for you' in text.lower():
         message_list = sorted(messages.values(), key=lambda item: item['create_time'])
-        print(f'message list: {message_list}')
         add_authorized_user(message_list=message_list)
 
 
@@ -91,7 +88,6 @@ def operate():
 @app.post("/messages")
 def postMessages():
     body = request.json
-    print(body)
     thread_pool.submit(handleMessage, body)
     return {}, HTTPStatus.OK
 
@@ -99,6 +95,5 @@ def postMessages():
 @app.post("/conversationEvents")
 def postConversationEvents():
     body = request.json
-    print(body)
     thread_pool.submit(handleConversationEvent, body)
     return {}, HTTPStatus.OK
