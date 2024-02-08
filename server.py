@@ -5,7 +5,7 @@ from operate.main import main
 from concurrent.futures import ThreadPoolExecutor
 from operate.models.apis import summarize_messages
 from datetime import datetime
-from operations import google_search, take_notes_in_google_docs
+from operations import add_authorized_user, take_notes_in_google_docs
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -36,18 +36,24 @@ def handleMessage(msg):
     try:
         create_time = parse_timestamp(create_time_str)
     except ValueError:
+<<<<<<< HEAD
         print(f'Invalid timestamp format. Please use YYYY-MM-DDTHH:mm:ss.mmm.')
         raise ValueError("Invalid timestamp format. Please use YYYY-MM-DDTHH:mm:ss.mmm.")
 
+=======
+        print(f'Invalid timestamp format {create_time_str}. Please use YYYY-MM-DDTHH:mm:ss.mmm.')
+    
+>>>>>>> 1e3b638 (entities)
     name = msg['name']
     text = msg['text']
     speaker = msg.get('speaker', None)
     messageExists = messages.get(name, None)
     messages[name] = {'name': name, 'text': text, 'speaker': speaker, 'create_time': create_time}
     text = msg.get('text', None)
-    question = 'how to increase my credit score?'
-    if not messageExists and text and 'google it for you' in text.lower():
-        google_search(question)
+    if not messageExists and text and 'handle it for you' in text.lower():
+        message_list = sorted(messages.values(), key=lambda item: item['create_time'])
+        print(f'message list: {message_list}')
+        add_authorized_user(message_list=message_list)
 
 
 def parse_timestamp(ts):

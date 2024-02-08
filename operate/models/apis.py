@@ -106,6 +106,55 @@ def summarize_messages(messages):
             traceback.print_exc()
         return None
 
+def extract_entities(messages):
+    system_prompt = [  {
+      "role": "system",
+      "content": "You will be provided with transcriptions from a call between a contact center agent and visitor, "
+      "the format of the content will be like AGENT: [Agent's message] and VISITOR: [Visitor's message], "
+      "and your task is to extract the following entities:\n    account holder full name\n    card number\n    new user to be added\n"
+      "and return the result as a json with keys account_holder, card_number, and new_user. Example: \{ \"account_holder\": \"John\", \"card_number\": 1111, \"new_user\": \"Henry\"\}\n"
+    }]
+    msgs = system_prompt
+    for m in messages:
+        text = m.get('text', None)
+        role = m.get('role', '')
+        content = f'{role}: {text}'
+        if text:
+            msgs.append({'role': 'user', 'content': content})
+
+    api_key = os.getenv("OPENAI_API_KEY")
+    client = OpenAI(api_key=api_key,)
+    try:
+        response = client.chat.completions.create(
+            model="gpt-4",
+            messages=msgs,
+            presence_penalty=1,
+            frequency_penalty=1,
+            temperature=0.7,
+            max_tokens=3000,
+        )
+
+        content = response.choices[0].message.content
+
+        if content.startswith("```json"):
+            content = content[len("```json") :]  # Remove starting ```json
+            if content.endswith("```"):
+                content = content[: -len("```")]  # Remove ending
+
+        content = json.loads(content)
+
+        return content
+
+    except Exception as e:
+        print(
+            f"{ANSI_GREEN}[Self-Operating Computer]{ANSI_RED}[Error] failed to extract entities {ANSI_RESET}",
+            content,
+            e,
+        )
+        if VERBOSE:
+            traceback.print_exc()
+        return None
+
 def call_gpt_4_vision_preview(messages):
     if VERBOSE:
         print("[call_gpt_4_v]")
