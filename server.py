@@ -4,30 +4,65 @@ from http import HTTPStatus
 from operate.main import main
 from concurrent.futures import ThreadPoolExecutor
 from operate.models.apis import summarize_messages
+from datetime import datetime
 
 app = Flask(__name__)
 cors = CORS(app)
 
 thread_pool = ThreadPoolExecutor(max_workers=1)
 
-messages = []
+messages = {}
 conversation_events = []
 
 def handleConversationEvent(body):
     conversation_events.append(body)
     type = body.get('type', None)
     if type and type == 'CLOSE':
-        summary = summarize_messages(messages)
+        print(messages)
+        message_list = sorted(messages.values(), key=lambda item: item['create_time'])
+        print(message_list)
+        summary = summarize_messages(message_list)
         print(summary)
         messages.clear()
         conversation_events.clear()
 
 def handleMessage(msg):
-    messages.append(msg)
+    if not validateMessage(msg):
+        return
+    create_time_str = msg['createTime']
+    try:
+        create_time = parse_timestamp(create_time_str)
+    except ValueError:
+        print(f'Invalid timestamp format. Please use YYYY-MM-DDTHH:mm:ss.mmm.')
+        raise ValueError("Invalid timestamp format. Please use YYYY-MM-DDTHH:mm:ss.mmm.")
+    
+    name = msg['name']
+    text = msg['text']
+    speaker = msg.get('speaker', None)
+    messages[name] = {
+        'name': name,
+        'text': text,
+        'speaker': speaker,
+        'create_time': create_time
+    }
     text = msg.get('text', None)
     if text and 'credit score' in text and '?' in text:
         prompt = 'What is my credit score?'
         main(model="gpt-4-with-ocr", terminal_prompt=prompt)
+
+def parse_timestamp(ts):
+    return datetime.fromisoformat(ts.replace('Z', '+00:00'))
+
+def validateMessage(message):
+    if message is None:
+        return False
+    if message.get('name', None) is None:
+        return False
+    if message.get('text', None) is None:
+        return False
+    if message.get('createTime', None) is None:
+        return False
+    return True  
 
 @app.route('/')
 def hello():
