@@ -48,7 +48,7 @@ def handleMessage(msg):
         'create_time': create_time
     }
     text = msg.get('text', None)
-    question = 'How to add spouse to platinum card?'
+    question = 'how to increase my credit score?'
     if not messageExists and text and 'google it for you' in text.lower():
         google_search(question)
 
