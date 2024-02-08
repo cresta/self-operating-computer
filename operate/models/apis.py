@@ -61,19 +61,22 @@ async def get_next_action(model, messages, objective, session_id):
 def summarize_messages(messages):
     system_prompt = [  {
       "role": "system",
-      "content": "You will be provided with transcriptions from a call between a contact center agent and visitor, and your task is to summarize the call as follows:\n    \n    "+
+      "content": "You will be provided with transcriptions from a call between a contact center agent and visitor, " +
+      "the format of the content will be like AGENT: [Agent's message] and VISITOR: [Visitor's message], " + 
+      "and your task is to summarize the call as follows:\n    \n    "+
       "-Overall summary of discussion\n    -Action items (what needs to be done and who is doing it)\n"
     }]
     msgs = system_prompt
     for m in messages:
         text = m.get('text', None)
+        role = m.get('role', '')
+        content = f'{role}: {text}'
         if text:
-            msgs.append({'role': 'user', 'content': text})
+            msgs.append({'role': 'user', 'content': content})
 
     api_key = os.getenv("OPENAI_API_KEY")
     client = OpenAI(api_key=api_key,)
     try:
-        print('calling openai')
         response = client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=msgs,
@@ -82,7 +85,6 @@ def summarize_messages(messages):
             temperature=0.7,
             max_tokens=500,
         )
-        print('openai response', response)
 
         content = response.choices[0].message.content
 
