@@ -40,6 +40,7 @@ def handleMessage(msg):
     name = msg['name']
     text = msg['text']
     speaker = msg.get('speaker', None)
+    messageExists = messages.get(name, None)
     messages[name] = {
         'name': name,
         'text': text,
@@ -47,8 +48,9 @@ def handleMessage(msg):
         'create_time': create_time
     }
     text = msg.get('text', None)
-    if text and 'credit score' in text and '?' in text:
-        google_search(text)
+    question = 'How to add spouse to platinum card?'
+    if not messageExists and text and 'google it for you' in text.lower():
+        google_search(question)
 
 def parse_timestamp(ts):
     return datetime.fromisoformat(ts.replace('Z', '+00:00'))
