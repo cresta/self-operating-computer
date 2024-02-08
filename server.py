@@ -36,14 +36,8 @@ def handleMessage(msg):
     try:
         create_time = parse_timestamp(create_time_str)
     except ValueError:
-<<<<<<< HEAD
-        print(f'Invalid timestamp format. Please use YYYY-MM-DDTHH:mm:ss.mmm.')
-        raise ValueError("Invalid timestamp format. Please use YYYY-MM-DDTHH:mm:ss.mmm.")
-
-=======
         print(f'Invalid timestamp format {create_time_str}. Please use YYYY-MM-DDTHH:mm:ss.mmm.')
     
->>>>>>> 1e3b638 (entities)
     name = msg['name']
     text = msg['text']
     speaker = msg.get('speaker', None)
