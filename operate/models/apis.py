@@ -83,7 +83,7 @@ def summarize_messages(messages):
             presence_penalty=1,
             frequency_penalty=1,
             temperature=0.7,
-            max_tokens=500,
+            max_tokens=3000,
         )
 
         content = response.choices[0].message.content
