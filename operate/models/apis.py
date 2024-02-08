@@ -31,6 +31,8 @@ from operate.utils.label import (
 from operate.utils.style import ANSI_GREEN, ANSI_RED, ANSI_RESET, ANSI_BRIGHT_MAGENTA
 import pkg_resources
 
+from openai import OpenAI
+
 
 # Load configuration
 config = Config()
@@ -56,6 +58,51 @@ async def get_next_action(model, messages, objective, session_id):
 
     raise ModelNotRecognizedException(model)
 
+def summarize_messages(messages):
+    system_prompt = [  {
+      "role": "system",
+      "content": "You will be provided with transcriptions from a call between a contact center agent and visitor, and your task is to summarize the call as follows:\n    \n    "+
+      "-Overall summary of discussion\n    -Action items (what needs to be done and who is doing it)\n"
+    }]
+    msgs = system_prompt
+    for m in messages:
+        text = m.get('text', None)
+        if text:
+            msgs.append({'role': 'user', 'content': text})
+
+    api_key = os.getenv("OPENAI_API_KEY")
+    client = OpenAI(api_key=api_key,)
+    try:
+        print('calling openai')
+        response = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=msgs,
+            presence_penalty=1,
+            frequency_penalty=1,
+            temperature=0.7,
+            max_tokens=500,
+        )
+        print('openai response', response)
+
+        content = response.choices[0].message.content
+
+        if content.startswith("```json"):
+            content = content[len("```json") :]  # Remove starting ```json
+            if content.endswith("```"):
+                content = content[: -len("```")]  # Remove ending
+
+        content = json.loads(content)
+
+        return content
+
+    except Exception as e:
+        print(
+            f"{ANSI_GREEN}[Self-Operating Computer]{ANSI_RED}[Error] failed to generate summary {ANSI_RESET}",
+            content,
+        )
+        if VERBOSE:
+            traceback.print_exc()
+        return None
 
 def call_gpt_4_vision_preview(messages):
     if VERBOSE:
