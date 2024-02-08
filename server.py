@@ -15,6 +15,7 @@ thread_pool = ThreadPoolExecutor(max_workers=1)
 messages = {}
 conversation_events = []
 
+
 def handleConversationEvent(body):
     conversation_events.append(body)
     type = body.get('type', None)
@@ -27,6 +28,7 @@ def handleConversationEvent(body):
         messages.clear()
         conversation_events.clear()
 
+
 def handleMessage(msg):
     if not validateMessage(msg):
         return
@@ -36,24 +38,21 @@ def handleMessage(msg):
     except ValueError:
         print(f'Invalid timestamp format. Please use YYYY-MM-DDTHH:mm:ss.mmm.')
         raise ValueError("Invalid timestamp format. Please use YYYY-MM-DDTHH:mm:ss.mmm.")
-    
+
     name = msg['name']
     text = msg['text']
     speaker = msg.get('speaker', None)
     messageExists = messages.get(name, None)
-    messages[name] = {
-        'name': name,
-        'text': text,
-        'speaker': speaker,
-        'create_time': create_time
-    }
+    messages[name] = {'name': name, 'text': text, 'speaker': speaker, 'create_time': create_time}
     text = msg.get('text', None)
     question = 'how to increase my credit score?'
     if not messageExists and text and 'google it for you' in text.lower():
         google_search(question)
 
+
 def parse_timestamp(ts):
     return datetime.fromisoformat(ts.replace('Z', '+00:00'))
+
 
 def validateMessage(message):
     if message is None:
@@ -64,7 +63,8 @@ def validateMessage(message):
         return False
     if message.get('createTime', None) is None:
         return False
-    return True  
+    return True
+
 
 @app.route('/')
 def hello():
@@ -74,6 +74,7 @@ def hello():
 @app.route('/health', methods=['GET'])
 def health():
     return 'I am healthy!', HTTPStatus.OK
+
 
 @app.route('/operate', methods=['POST'])
 def operate():
@@ -93,6 +94,7 @@ def postMessages():
     print(body)
     thread_pool.submit(handleMessage, body)
     return {}, HTTPStatus.OK
+
 
 @app.post("/conversationEvents")
 def postConversationEvents():
