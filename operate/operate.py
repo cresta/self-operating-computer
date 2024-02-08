@@ -83,8 +83,7 @@ def main(model, terminal_prompt, voice_mode=False):
         objective = terminal_prompt
     elif voice_mode:
         print(
-            f"{ANSI_GREEN}[Self-Operating Computer]{
-                ANSI_RESET} Listening for your command... (speak now)"
+            f"{ANSI_GREEN}[Self-Operating Computer]{ANSI_RESET} Listening for your command... (speak now)"
         )
         try:
             objective = mic.listen()
@@ -92,8 +91,7 @@ def main(model, terminal_prompt, voice_mode=False):
             print(f"{ANSI_RED}Error in capturing voice input: {e}{ANSI_RESET}")
             return  # Exit if voice input fails
     else:
-        print(
-            f"{ANSI_GREEN}[Self-Operating Computer]\n{ANSI_RESET}{USER_QUESTION}")
+        print(f"{ANSI_GREEN}[Self-Operating Computer]\n{ANSI_RESET}{USER_QUESTION}")
         print(f"{ANSI_YELLOW}[User]{ANSI_RESET}")
         objective = prompt(style=style)
 
@@ -122,14 +120,12 @@ def main(model, terminal_prompt, voice_mode=False):
                 break
         except ModelNotRecognizedException as e:
             print(
-                f"{ANSI_GREEN}[Self-Operating Computer]{
-                    ANSI_RED}[Error] -> {e} {ANSI_RESET}"
+                f"{ANSI_GREEN}[Self-Operating Computer]{ANSI_RED}[Error] -> {e} {ANSI_RESET}"
             )
             break
         except Exception as e:
             print(
-                f"{ANSI_GREEN}[Self-Operating Computer]{
-                    ANSI_RED}[Error] -> {e} {ANSI_RESET}"
+                f"{ANSI_GREEN}[Self-Operating Computer]{ANSI_RED}[Error] -> {e} {ANSI_RESET}"
             )
             break
 
@@ -167,33 +163,27 @@ def operate(operations):
             summary = operation.get("summary")
 
             print(
-                f"{ANSI_GREEN}[Self-Operating Computer]{
-                    ANSI_BLUE} Objective Completed {ANSI_RESET}"
+                f"{ANSI_GREEN}[Self-Operating Computer]{ANSI_BLUE} Objective Completed {ANSI_RESET}"
             )
             print(
-                f"{ANSI_GREEN}[Self-Operating Computer]{
-                    ANSI_BLUE} Summary {ANSI_RESET}{summary}"
+                f"{ANSI_GREEN}[Self-Operating Computer]{ANSI_BLUE} Summary {ANSI_RESET}{summary}"
             )
             return True
 
         else:
             print(
-                f"{ANSI_GREEN}[Self-Operating Computer]{
-                    ANSI_RED}[Error] unknown operation response :({ANSI_RESET}"
+                f"{ANSI_GREEN}[Self-Operating Computer]{ANSI_RED}[Error] unknown operation response :({ANSI_RESET}"
             )
             print(
-                f"{ANSI_GREEN}[Self-Operating Computer]{
-                    ANSI_RED}[Error] AI response {ANSI_RESET}{operation}"
+                f"{ANSI_GREEN}[Self-Operating Computer]{ANSI_RED}[Error] AI response {ANSI_RESET}{operation}"
             )
             return True
 
         print(
-            f"{ANSI_GREEN}[Self-Operating Computer]{
-                ANSI_BRIGHT_MAGENTA}[Operate] Thought {ANSI_RESET} {operate_thought}"
+            f"{ANSI_GREEN}[Self-Operating Computer]{ANSI_BRIGHT_MAGENTA}[Operate] Thought {ANSI_RESET} {operate_thought}"
         )
         print(
-            f"{ANSI_GREEN}[Self-Operating Computer]{ANSI_BRIGHT_MAGENTA}[Operate] {
-                operate_type} {ANSI_RESET} {operate_detail}"
+            f"{ANSI_GREEN}[Self-Operating Computer]{ANSI_BRIGHT_MAGENTA}[Operate] {operate_type} {ANSI_RESET} {operate_detail}"
         )
 
     return False
