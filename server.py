@@ -44,7 +44,10 @@ def handleMessage(msg):
     text = msg.get('text', None)
     if not messageExists and text and 'handle it for you' in text.lower():
         message_list = sorted(messages.values(), key=lambda item: item['create_time'])
-        add_authorized_user(message_list=message_list)
+        try:
+            add_authorized_user(message_list=message_list)
+        except Exception as e:
+            print("DEBUG: ", e)
 
 
 def parse_timestamp(ts):
@@ -95,5 +98,6 @@ def postMessages():
 @app.post("/conversationEvents")
 def postConversationEvents():
     body = request.json
+    print("received conversation event: ", body)
     thread_pool.submit(handleConversationEvent, body)
     return {}, HTTPStatus.OK
