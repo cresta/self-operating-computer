@@ -108,8 +108,7 @@ def main(model, terminal_prompt, voice_mode=False):
             print("[Self Operating Computer] loop_count", loop_count)
         try:
             operations, session_id = asyncio.run(
-                get_next_action(model, messages, objective, session_id)
-            )
+                get_next_action(model, messages, objective, session_id))
 
             stop = operate(operations)
             if stop:
@@ -119,14 +118,10 @@ def main(model, terminal_prompt, voice_mode=False):
             if loop_count > 10:
                 break
         except ModelNotRecognizedException as e:
-            print(
-                f"{ANSI_GREEN}[Self-Operating Computer]{ANSI_RED}[Error] -> {e} {ANSI_RESET}"
-            )
+            print(f"{ANSI_GREEN}[Self-Operating Computer]{ANSI_RED}[Error] -> {e} {ANSI_RESET}")
             break
         except Exception as e:
-            print(
-                f"{ANSI_GREEN}[Self-Operating Computer]{ANSI_RED}[Error] -> {e} {ANSI_RESET}"
-            )
+            print(f"{ANSI_GREEN}[Self-Operating Computer]{ANSI_RED}[Error] -> {e} {ANSI_RESET}")
             break
 
 
@@ -165,9 +160,7 @@ def operate(operations):
             print(
                 f"{ANSI_GREEN}[Self-Operating Computer]{ANSI_BLUE} Objective Completed {ANSI_RESET}"
             )
-            print(
-                f"{ANSI_GREEN}[Self-Operating Computer]{ANSI_BLUE} Summary {ANSI_RESET}{summary}"
-            )
+            print(f"{ANSI_GREEN}[Self-Operating Computer]{ANSI_BLUE} Summary {ANSI_RESET}{summary}")
             return True
 
         else:
