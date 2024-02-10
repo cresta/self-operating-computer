@@ -7,6 +7,9 @@ from operate.models.apis import summarize_messages
 from datetime import datetime
 from operations import add_authorized_user, take_notes_in_google_docs
 
+# How to run this server:
+# - Install the required packages: `pip install -r requirements.txt`
+# - Run the server: `OPENAI_API_KEY=${OPENAI_API_KEY} PYTHONPATH=./ FLASK_ENV=development FLASK_APP=server flask run`
 app = Flask(__name__)
 cors = CORS(app)
 
