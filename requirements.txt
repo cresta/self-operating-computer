@@ -53,4 +53,4 @@ ultralytics==8.0.227
 easyocr==1.7.1
 flask==2.0.3
 flask_cors==3.0.9
-Werkzeug==2.2.2
+Werkzeug==3.0.6
